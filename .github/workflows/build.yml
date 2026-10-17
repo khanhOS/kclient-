@@ -41,6 +41,12 @@ jobs:
           done
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
 
+      - name: Set up modern Gradle
+        if: always()
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.12.1"
+
       - name: Build JAR
         shell: bash
         run: |
@@ -50,8 +56,6 @@ jobs:
             chmod +x ./gradlew
             ./gradlew --no-daemon build
           elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
-            sudo apt-get update
-            sudo apt-get install -y gradle
             gradle --no-daemon build
           else
             echo "::error::Gradle project root could not be identified."
